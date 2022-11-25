@@ -1,6 +1,6 @@
 streamlit
 pathlib
-PIL
+Pillow
 random
 pandas
 requests
