@@ -1,2 +1,11 @@
-pip install matplotlib
-pip install streamlit
+streamlit
+pathlib
+PIL
+random
+pandas
+requests
+numpy
+matplotlib
+tensorflow
+cv2
+git+https://github.com/DataScientest-Studio/yawbcc

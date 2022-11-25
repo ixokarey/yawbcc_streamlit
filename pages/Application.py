@@ -1,14 +1,12 @@
 import streamlit as st
-import os
 import pathlib
 from PIL import Image
 import random
 import pandas as pd
 import requests
 import numpy as np
-import json
 import matplotlib.pyplot as plt
-from yawbcc.demo import compute_grad_cam_heatmaps
+from yawbcc.demo import compute_grad_cam_heatmaps,color_segmentation,unet_segmentation
 from yawbcc.datasets import load_wbc_dataset, WBCDataSequence
 import tensorflow as tf
 import cv2
@@ -34,8 +32,14 @@ demodf = df.groupby('group').sample(n=10, random_state=rng.bit_generator).sort_i
 demods = WBCDataSequence(demodf['path'], demodf['group'].map(cls_to_idx), image_size=(256, 256))
 images = np.concatenate([batch[0] for batch in demods])
 DATA_DIR = pathlib.Path.home() / 'yawbcc_data'
-gc_conv = tf.keras.models.load_model(DATA_DIR / 'models' / 'gradcam_conv.hdf5')
-gc_clf = tf.keras.models.load_model(DATA_DIR / 'models' / 'gradcam_clf.hdf5')
+# Load gradcam models
+with tf.device('/CPU:0'):
+    gc_conv = tf.keras.models.load_model(DATA_DIR / 'models' / 'gradcam_conv.hdf5')
+    gc_clf = tf.keras.models.load_model(DATA_DIR / 'models' / 'gradcam_clf.hdf5')
+
+# Load unet model
+with tf.device('/CPU:0'):
+    unet_cnn = tf.keras.models.load_model(DATA_DIR / 'models' / 'unet_256.hdf5')
 idx = rng.choice(demodf.index)
 
 # IMAGE SELECTION (Columns #1)
@@ -47,9 +51,9 @@ text_2.markdown("<p style='padding: 10px; border: 2px solid white;text-align: ce
 
 
 col_1,col_2,col_3,col_4,col_5,col_6 = st.columns([4,2,2,1,1,4])
-col_3.markdown("<p style='padding: 10px; border: 1px solid white;text-align: center;font-size: 20px;'>Importation</p>", unsafe_allow_html=True)
-col_5.markdown("<p style='padding: 10px; border: 1px solid white;text-align: center;font-size: 20px;'>Aléatoire</p>", unsafe_allow_html=True)
-col_4.markdown("<p style='padding: 10px; border: 1px solid white;text-align: center;font-size: 20px;'>Manuel</p>", unsafe_allow_html=True)
+col_3.markdown("<p style='padding: 10px; border: 2px solid white;text-align: center;font-size: 20px;'>Importation</p>", unsafe_allow_html=True)
+col_5.markdown("<p style='padding: 10px; border: 2px solid white;text-align: center;font-size: 20px;'>Aléatoire</p>", unsafe_allow_html=True)
+col_4.markdown("<p style='padding: 10px; border: 2px solid white;text-align: center;font-size: 20px;'>Manuel</p>", unsafe_allow_html=True)
     # Bouton aléatoire
 with col_5:
     alea_button = st.button("🎲")
@@ -70,7 +74,6 @@ with col_3:
 
 
 with col_2:
-
     if dd_img:
         image_selected = dd_img
         image_test = Image.open(dd_img)  
@@ -80,6 +83,9 @@ with col_2:
         image_test = Image.open(image_path) 
     st.image(image_test,caption=f"Image séléctionnée : {image_name}")
     
+func_1,func_2,func_3 = st.columns([2,3,2])
+
+func_2.markdown("<p style='padding: 20px; border: 2px solid white;text-align: center;font-size: 20px;'>Fonctions</p>", unsafe_allow_html=True)
 
 but_1,but_2,but_3,but_4,but_5 = st.columns([5,1,1,1,5])
 with but_2: 
@@ -111,8 +117,7 @@ if pred_button:
                 proba_request = requests.post(predict_proba_link,files=files).json()
                 df_temp = pd.DataFrame.from_dict(proba_request).rename({0:model},axis=0)
                 df_proba = pd.concat([df_proba,df_temp])
-            min_header = [x[:2] for x in df_proba.columns]
-        st.dataframe(df_proba.set_axis(min_header,axis=1).style.apply(highlight_matrix,axis=1),use_container_width=True)
+        st.dataframe(df_proba.style.apply(highlight_matrix,axis=1),use_container_width=True)
 
 elif grad_button:
     col_grad1,col_grad2,col_grad3,col_grad4,col_grad5 = st.columns([3,1,1,1,3])
@@ -135,6 +140,20 @@ elif grad_button:
         st.image(gradcam,caption="Gradcam",use_column_width=True)
 
 elif segm_button:
-    st.write("segmentation")
+    idx = demodf[demodf["image"]==image_name].index.to_list()[0]
+    image = np.uint8(images[demodf.index.get_loc(idx)])
+    cmask = color_segmentation(image)
+    umask = unet_segmentation(image, unet_cnn)
+
+    cimg = cv2.bitwise_and(image, image, mask=cmask)
+    uimg = cv2.bitwise_and(image, image, mask=umask)
+
+    col_seg1,col_seg2,col_seg3,col_seg4 = st.columns([3,1,1,3])
+    with col_seg2:
+        st.image(cimg,caption="Segmentation avec couleurs",use_column_width=True)
+    with col_seg3:
+        st.image(uimg,caption="Segmentation avec UNet",use_column_width=True)
+    
+
 
 
