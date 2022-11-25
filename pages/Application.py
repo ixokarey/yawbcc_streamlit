@@ -1,7 +1,6 @@
 import streamlit as st
 import pathlib
 from PIL import Image
-import random
 import pandas as pd
 import requests
 import numpy as np
