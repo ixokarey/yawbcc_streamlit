@@ -1,7 +1,6 @@
 streamlit
 pathlib
 Pillow
-random
 pandas
 requests
 numpy
