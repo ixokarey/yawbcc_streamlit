@@ -8,4 +8,4 @@ numpy
 matplotlib
 tensorflow
 cv2
--e git://github.com/DataScientest-Studio/yawbcc
+yawbcc == -e git://github.com/DataScientest-Studio/yawbcc
