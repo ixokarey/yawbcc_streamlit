@@ -1,3 +1,7 @@
+import sys
+import subprocess
+subprocess.check_call([sys.executable, '-m', 'pip', 'install', 
+'<streamlit>'])
 import streamlit as st
 import numpy as np
 import pandas as pd
