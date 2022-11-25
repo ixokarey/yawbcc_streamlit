@@ -7,4 +7,4 @@ numpy
 matplotlib
 tensorflow
 opencv-python
-yawbcc == git+git://github.com/DataScientest-Studio/yawbcc.git
+-e git+git://github.com/DataScientest-Studio/yawbcc.git
