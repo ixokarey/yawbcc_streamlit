@@ -6,5 +6,5 @@ requests
 numpy
 matplotlib
 tensorflow
-cv2
+opencv-python
 yawbcc == -e git://github.com/DataScientest-Studio/yawbcc
