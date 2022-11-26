@@ -28,6 +28,9 @@ with image3:
 
     >+ Sous la supervision de Maxime - DataScientest
 
-    >+ Git Hub : https://github.com/DataScientest-Studio/yawbcc / https://github.com/corralien/yawbcc
+    >+ Git Hub : https://github.com/DataScientest-Studio/yawbcc
+    >+ Git Hub #2 : https://github.com/corralien/yawbcc
+    >+ Git Hub #3 : https://github.com/ixokarey/yawbcc_streamlit
+    
     >+ Api : https://yawbcc.demain.xyz/api/v1/docs
     """)
