@@ -5,56 +5,31 @@ from PIL import Image
 import numpy as np
 import random
 
-st.set_page_config(page_icon="🖼️")
-st.markdown("<h1 style='text-align: center; color: white;'>Preprocessing</h1>", unsafe_allow_html=True)
-st.sidebar.markdown("Damien Corral damien.corral@gmail.com")
-st.sidebar.markdown("Anastasiya Trushko Perney anastasia.trushko@gmail.com")
-st.sidebar.markdown("Jordan Porcu jordan.porcu@gmail.com")
-st.sidebar.markdown("Jérémy Lavergne jeremy.lav2009@gmail.com")
+# Configuration de la page
+# Page setting
+st.set_page_config(layout="wide")
 
-BASE_DIR = pathlib.Path.home () / 'yawbcc_data' / 'barcelona_256_masked'
+# Importation de style.css
+# style.css import
+def local_css(file_name):
+    with open(file_name) as f:
+        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+local_css("style.css")
 
-folder_dir = os.listdir(str(BASE_DIR))
+# Titre 
+# Title
+title_1,title_2,title_3 = st.columns([4,6,4])
+title_2.markdown("<p style='padding: 10px; border: 2px solid white;text-align: center;font-size: 20px;'>Pré-processing</p>", unsafe_allow_html=True)
 
-button_cols1 = st.columns(8)
-random_but1 = button_cols1[4].button("Aléatoire")
-manual_but1 = button_cols1[3].button("Manuel")
+sub_1,sub_2,sub_3,sub_4 = st.columns([4,3,3,4])
+sub_2.markdown("<p style='padding: 10px; border: 2px solid white;text-align: center;font-size: 20px;'>Ségmentation par intensité de couleur</p>", unsafe_allow_html=True)
+sub_3.markdown("<p style='padding: 10px; border: 2px solid white;text-align: center;font-size: 20px;'>Ségmentation par UNet</p>", unsafe_allow_html=True)
 
-if random_but1:
-    folder_selected = random.choice(folder_dir)
-    img_dir = os.path.join(BASE_DIR,folder_selected)
-    img_selection = os.listdir(img_dir)
-    img_selected = random.choice(img_selection)
-    st.write("Image sélectionnée : " + img_selected)
-    st.write("Classe : " + folder_selected.upper())
+img1 = Image.open(r"images\segm_couleur.png")
+sub_2.image(img1,use_column_width=True)
 
-else: 
-    folder_selected = st.selectbox('Selectionnez une classe', folder_dir)
-    img_dir = os.path.join(BASE_DIR,folder_selected)
-    img_selection = os.listdir(img_dir)
-    img_selected = st.selectbox('Selectionnez une image', img_selection)
+img2 = Image.open(r"images\unet_architecture.png")
+sub_3.image(img2,use_column_width=True)
 
-
-
-
-
-
-complete_img_dir = os.path.join(img_dir,img_selected)
-selected_image = Image.open(complete_img_dir)
-
-REMAPPED_DIR = str(pathlib.Path.home () / 'yawbcc_data' / 'barcelona_remapped') + "/" + folder_selected + "/" + img_selected
-remapped_img = Image.open(REMAPPED_DIR)
-
-ORIGINAL_DIR = str(pathlib.Path.home () / 'yawbcc_data' / 'barcelona') + "/" + folder_selected + "/" + img_selected
-original_img = Image.open(ORIGINAL_DIR)
-
-random_but=False
-
-
-
-list = [original_img,remapped_img,selected_image]
-cols_image = st.columns(3) 
-cols_image[0].image(list[0],caption = "Originale",use_column_width=True)
-cols_image[1].image(list[1],caption = "Remappée",use_column_width=True)
-cols_image[2].image(list[2],caption = "Segmentée",use_column_width=True)
-
+img3 = Image.open(r"images\segm_unet.png")
+sub_3.image(img3,use_column_width=True)   

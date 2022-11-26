@@ -1,22 +1,41 @@
 import streamlit as st
-import os
-import pathlib
-from PIL import Image
-import numpy as np
-import random
 
-st.set_page_config(page_icon="🔬")
-st.sidebar.markdown("Damien Corral damien.corral@gmail.com")
-st.sidebar.markdown("Anastasiya Trushko Perney anastasia.trushko@gmail.com")
-st.sidebar.markdown("Jordan Porcu jordan.porcu@gmail.com")
-st.sidebar.markdown("Jérémy Lavergne jeremy.lav2009@gmail.com")
-st.title("Project YAWBCC (Yet another white cell classification)")
-st.header("Objectif")
-st.write("L’objectif de ce projet est de classifier les cellules sanguines en fonction de leurs caractéristiques morphologiques en utilisant des techniques d’apprentissage profond (ou Deep Learning). Pour y parvenir, nous utiliserons un des réseaux neuronaux de convolution (CNN) avec une méthode d’apprentissage par transfert (Transfer Learning) ainsi qu’une optimisation des poids des modèles grâce à la méthode du Fine-tuning.")
+# Configuration de la page
+# Page setting
+st.set_page_config(layout="wide")
+
+# Importation de style.css
+# style.css import
+def local_css(file_name):
+    with open(file_name) as f:
+        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+local_css("style.css")
+
+# Titre 
+# Title
+title_1,title_2,title_3 = st.columns([2,3,2])
+title_2.markdown("<p style='padding: 20; border: 2px solid white;text-align: center;font-size: 20;'>YAWBCC</p>", unsafe_allow_html=True)
+
+# Sous titre 1 
+# Subtitle #1
+subtitle_1,subtitle_2,subtitle_3 = st.columns([2,3,2])
+subtitle_2.markdown("<p style='padding: 20; border: 2px solid white;text-align: center;font-size: 20;'>Objectif</p>", unsafe_allow_html=True)
+
+# Texte 1
+# Text #1
+subtitle_2.write("L’objectif de ce projet est de classifier les cellules sanguines en fonction de leurs caractéristiques morphologiques en utilisant des techniques d’apprentissage profond (ou Deep Learning). Pour y parvenir, nous utiliserons un des réseaux neuronaux de convolution (CNN) avec une méthode d’apprentissage par transfert (Transfer Learning) ainsi qu’une optimisation des poids des modèles grâce à la méthode du Fine-tuning.")
     
-st.header("Contexte")
-st.image("cell_types.png")
-st.write("""
+# Sous titre 2 
+# Subtitle #2
+subtitle_2.markdown("<p style='padding: 10; border: 2px solid white;text-align: center;font-size: 20;'>Contexte</p>", unsafe_allow_html=True)
+
+# Image 1
+# Image #1
+subtitle_2.image("images\cell_types.png",caption = "Les différents types de cellules",use_column_width=True)
+
+# Texte 2
+# Text #2
+subtitle_2.write("""
     Les diagnostics de la majorité des maladies hématologiques commencent par une analyse morphologique des cellules sanguines périphériques. Ces dernières circulent dans les vaisseaux sanguins et contiennent trois types de cellules principales suspendues dans du plasma :
              
     - l’érythrocyte (globule rouge)

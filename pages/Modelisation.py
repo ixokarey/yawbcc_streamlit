@@ -6,36 +6,75 @@ import numpy as np
 import random
 import pandas as pd
 
-st.set_page_config(page_icon="🪛")
-st.markdown("<h1 style='text-align: center; color: white;'>Modelisation</h1>", unsafe_allow_html=True)
-st.sidebar.markdown("Damien Corral damien.corral@gmail.com")
-st.sidebar.markdown("Anastasiya Trushko Perney anastasia.trushko@gmail.com")
-st.sidebar.markdown("Jordan Porcu jordan.porcu@gmail.com")
-st.sidebar.markdown("Jérémy Lavergne jeremy.lav2009@gmail.com")
+# Configuration de la page
+# Page setting
+st.set_page_config(layout="wide")
+
+# Importation de style.css
+# style.css import
+def local_css(file_name):
+    with open(file_name) as f:
+        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+local_css("style.css")
 
 model_list = ["VGG16","ResNet50","MobileNet","Xception"]
 
-selected_model = st.selectbox("Choisissez un modèle : ", model_list)
-st.title(selected_model)
-BASE_DIR = selected_model
+# Titre 
+# Title
+title_1,title_2,title_3 = st.columns([2,3,2])
+with title_2:
+    st.markdown("<p style='padding: 10px; border: 2px solid white;text-align: center;font-size: 20px;'>Modélisation</p>", unsafe_allow_html=True)
+    st.write("Choisissez un modèle afin de consulter son architecture, son entraînement ou ses résultats.")
+    selected_model = st.selectbox("Choisissez un modèle : ", model_list)
+    st.markdown(f"<p style='padding: 10px; border: 2px solid white;text-align: center;font-size: 20px;'>{selected_model}</p>", unsafe_allow_html=True)
+    
+select1,select2,select3,select4 = st.columns([4,3,3,4])
+selected_view = select2.radio("Séléctionnez l'étape du modèle à visionner",options=["Architecture","Entraînement","Résultats"])
 
-with st.expander("Architecture"):
-    cols = st.columns(2)
-    cols[0].image(BASE_DIR+"/summary_initial.png",caption="Sans fine-tuning")
-    cols[1].image(BASE_DIR+"/summary_ft.png",caption="Avec fine-tuning")
+# Sélection "Architecture"
+# Selected "Architecture"
+select_title1,select_title2,select_title3 = st.columns([2,3,2])
+if selected_view == "Architecture":
+    selected_view2 = select3.radio("Sélectionnez l'élément à visionner",["Résumé","Structure"])
 
-    if selected_model == "VGG16":
-        centering_cols = st.columns(3)
-        centering_cols[1].image(BASE_DIR+"/arch.png",caption= "Architecture du modèle " + str(selected_model))
-    else:
-        st.image(BASE_DIR+"/arch.png",caption= "Architecture du modèle " + str(selected_model))
+    if selected_view2 == "Résumé":
+        select_title2.markdown("<p style='padding: 10px; border: 2px solid white;text-align: center;font-size: 20px;'>Résumé</p>", unsafe_allow_html=True)
+        view1,view2,view3,view4 = st.columns([4,3,3,4])
+        view2.markdown("<p style='padding: 10px; border: 2px solid white;text-align: center;font-size: 20px;'>Sans fine-tuning</p>", unsafe_allow_html=True)
+        view2.image(f"{selected_model}/summary_initial.png",use_column_width=True)
 
-with st.expander("Entraînement"):
-    st.image(BASE_DIR+"/fit_1_10.png",caption="Sans fine-tuning")
-    st.image(BASE_DIR+"/fit_11_20.png",caption="Avec fine-tuning")
+        view3.markdown("<p style='padding: 10px; border: 2px solid white;text-align: center;font-size: 20px;'>Avec fine-tuning</p>", unsafe_allow_html=True)
+        view3.image(f"{selected_model}/summary_ft.png",use_column_width=True)  
 
-with st.expander("Résultats"):
-    st.image(BASE_DIR+"/acc_loss_plot.png",caption = "Courbe d'entraînement (Loss/Accuracy)")
-    result_col = st.columns(2)
-    result_col[0].image(BASE_DIR+"/cr.png",caption = "Rapport de classification")
-    result_col[1].image(BASE_DIR+"/cm_heatmap.png", caption="Matrice de confusion")
+    elif selected_view2 == "Structure":
+        select_title2.markdown("<p style='padding: 10px; border: 2px solid white;text-align: center;font-size: 20px;'>Structure</p>", unsafe_allow_html=True)
+        if selected_model == "VGG16":
+            vgg1,vgg2,vgg3,vgg4,vgg5 = st.columns([2,1,1,1,2])
+            vgg3.image(f"{selected_model}/arch.png",use_column_width=True)
+        else:
+            select_title2.image(f"{selected_model}/arch.png",use_column_width=True)
+
+# Sélection "Entraînement"
+# Selected "Entraînement"
+elif selected_view == "Entraînement":
+    selected_view2 = select3.radio("Sélectionnez l'élément à visionner",["Sans fine-tuning","Avec fine-tuning"])
+    if selected_view2 == "Sans fine-tuning":
+        select_title2.markdown("<p style='padding: 10px; border: 2px solid white;text-align: center;font-size: 20px;'>Sans fine-tuning</p>", unsafe_allow_html=True)
+        select_title2.image(f"{selected_model}/fit_1_10.png",use_column_width=True)
+    elif selected_view2 == "Avec fine-tuning":
+        select_title2.markdown("<p style='padding: 10px; border: 2px solid white;text-align: center;font-size: 20px;'>Avec fine-tuning</p>", unsafe_allow_html=True)
+        select_title2.image(f"{selected_model}/fit_11_20.png",use_column_width=True)
+ 
+# Sélection "Résultats"
+# Selected "Résultats"
+elif selected_view == "Résultats":
+    selected_view2 = select3.radio("Sélectionnez l'élément à visionner",["Courbe d'apprentissage","Matrice de confusion","Rapport de classification"])
+    if selected_view2 == "Courbe d'apprentissage":
+        select_title2.markdown("<p style='padding: 10px; border: 2px solid white;text-align: center;font-size: 20px;'>Courbe d'apprentissage</p>", unsafe_allow_html=True)    
+        select_title2.image(f"{selected_model}/acc_loss_plot.png",use_column_width=True)
+    elif selected_view2 == "Matrice de confusion":
+        select_title2.markdown("<p style='padding: 10px; border: 2px solid white;text-align: center;font-size: 20px;'>Matrice de confusion</p>", unsafe_allow_html=True)  
+        select_title2.image(f"{selected_model}/cm_heatmap.png",use_column_width=True)
+    elif selected_view2 == "Rapport de classification":
+        select_title2.markdown("<p style='padding: 10px; border: 2px solid white;text-align: center;font-size: 20px;'>Rapport de classification</p>", unsafe_allow_html=True)  
+        select_title2.image(f"{selected_model}/cr.png",use_column_width=True)
