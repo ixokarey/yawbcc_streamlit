@@ -62,8 +62,7 @@ with expander_2:
 # Selection "Image for each class"
 expander_3 = title_2.expander("Image pour chacune des classes")
 with expander_3:
-    image_cell = Image.open("images\images_group.png")
-    st.image(image_cell,use_column_width=True)
+    st.image("images\images_group.png",use_column_width=True)
 
 # Sélection "Dimension des images"
 # Selection "Images dimension"
