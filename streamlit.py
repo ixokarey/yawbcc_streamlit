@@ -48,7 +48,7 @@ subtitle_2.markdown("<p style='padding: 10; border: 2px solid white;text-align: 
 # Image 1
 # Image #1
 imgcol1,imgcol2,imgcol3 = st.columns([2,1,2])
-imgcol2.image("images\cell_types.png",caption = "Les différents types de cellules",use_column_width=True)
+imgcol2.image("images/cell_types.png",caption = "Les différents types de cellules",use_column_width=True)
 
 
 subtitle_1,subtitle_2,subtitle_3 = st.columns([2,3,2])

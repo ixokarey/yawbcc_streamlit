@@ -62,7 +62,7 @@ with expander_2:
 # Selection "Image for each class"
 expander_3 = title_2.expander("Image pour chacune des classes")
 with expander_3:
-    st.image("images\images_group.png",use_column_width=True)
+    st.image("images/images_group.png",use_column_width=True)
 
 # Sélection "Dimension des images"
 # Selection "Images dimension"
