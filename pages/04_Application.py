@@ -6,6 +6,7 @@ import pandas as pd
 import requests
 import numpy as np
 import matplotlib.pyplot as plt
+from yawbcc.images import central_pad_and_crop
 from yawbcc.demo import compute_grad_cam_heatmaps,color_segmentation,unet_segmentation
 from yawbcc.datasets import load_wbc_dataset, WBCDataSequence
 import tensorflow as tf
@@ -91,8 +92,8 @@ with col_3:
 with col_2:
     if dd_img:
         image_selected = dd_img
-        image_test = Image.open(dd_img)  
-        image_name = dd_img.name    
+        image_test = Image.open(dd_img)
+        image_name = dd_img.name
     else: 
         image_path = demodf[demodf["image"]==image_selected]["path"].item()
         image_test = Image.open(image_path) 
@@ -173,6 +174,7 @@ elif segm_button:
 
     col_seg1,col_seg2,col_seg3,col_seg4 = st.columns([3,1,1,3])
     with col_seg2:
-        st.image(cimg,caption="Segmentation avec couleurs",use_column_width=True)
+        st.image(cimg,caption="Segmentation par computer vision",use_column_width=True)
     with col_seg3:
-        st.image(uimg,caption="Segmentation avec UNet",use_column_width=True)
+        st.image(uimg,caption="Segmentation par deep learning",use_column_width=True)
+
